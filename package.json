@@ -1,0 +1,12 @@
+{
+  "name": "Aetheriablog",
+  "version": "1.0.0",
+  "description": "My custom static blog engine",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "marked": "^12.0.0"
+  },
+  "type": "module"
+}
