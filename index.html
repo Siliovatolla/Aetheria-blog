@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aetheria Blog</title>
+  <!-- 引入 Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- 引入 marked.js 库 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@latest"></script>
+
+  <style>
+    :root {
+      /* 主题色 - 淡黄色 */
+      --primary-bg: #fdf6e3; /* 柔和米黄背景 */
+      --secondary-bg: #eee8d5; /* 用于卡片等 */
+      --accent-color: #ff7316; /* 橙棕色，作为强调色 */
+      --text-color: #586e75; /* 深灰色文字 */
+      --heading-color: #2c3e50; /* 标题颜色 */
+      --border-color: #c9c3b0; /* 边框颜色 */
+
+      /* 链接颜色 */
+      --link-color: #268bd2; /* 蓝色链接 */
+      --link-hover-color: #1e6ea8;
+    }
+
+
+    /* 全局重置与基础样式 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      line-height: 1.8;
+      color: var(--text-color);
+      background-color: var(--primary-bg);
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease-in-out;
+    }
+
+    a:hover {
+      color: var(--link-hover-color);
+      text-decoration: underline;
+    }
+
+    /* 容器布局 */
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem; /* 增大内边距 */
+    }
+
+    /* 头部区域 */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2.5rem; /* 增大标题 */
+      color: var(--heading-color);
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px; /* 微调字间距 */
+    }
+
+    .subtitle {
+      color: var(--text-color); /* 使用主文本色 */
+      opacity: 0.85; /* 稍微降低不透明度 */
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 主要内容区 */
+    .content {
+      margin-bottom: 2.5rem;
+    }
+
+    /* 卡片式文章容器 (可选) */
+    .card {
+       background-color: var(--secondary-bg);
+       border-radius: 12px; /* 圆角 */
+       padding: 1.8rem;
+       margin-bottom: 2rem;
+       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* 轻微阴影 */
+       border: 1px solid var(--border-color);
+       transition: transform 0.2s ease, box-shadow 0.2s ease; /* 悬停动效 */
+    }
+    .card:hover {
+        transform: translateY(-3px); /* 向上轻微移动 */
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 文本元素样式优化 */
+    h2, h3, h4 {
+      color: var(--heading-color);
+      margin-top: 1.8em;
+      margin-bottom: 0.8em;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        position: relative;
+        display: inline-block;
+    }
+    h2::after { /* 给H2标题加一个小装饰线 */
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 50px;
+        height: 3px;
+        background-color: var(--accent-color);
+        border-radius: 2px;
+    }
+
+    p {
+      margin-bottom: 1.2rem;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    li {
+      margin: 0.4rem 0;
+    }
+
+    /* 代码相关样式 */
+    pre, code {
+      font-family: 'Source Code Pro', monospace;
+      background-color: var(--secondary-bg);
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    code {
+      padding: 0.2em 0.4em;
+      font-size: 0.92em; /* 稍小一点 */
+    }
+
+    pre {
+      padding: 1rem;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    pre code {
+        padding: 0;
+        background: none;
+        border: none;
+        font-size: 0.95em;
+    }
+
+    /* 引用块 */
+    blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      border-left: 5px solid var(--accent-color);
+      background-color: rgba(211, 84, 0, 0.05); /* 使用强调色的低透明度背景 */
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+    }
+    blockquote p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* 图片 */
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 1rem auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* 页脚 */
+    footer {
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.75;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .card {
+        padding: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+          font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Aetheria Blog</h1>
+      <p class="subtitle">阿霄<a href="https://github.com/Siliovatolla" target="_blank" rel="noopener noreferrer">github</a>直达</p>
+    </header>
+
+    <main class="content">
+        <!-- 简介（碎碎念）卡片 -->
+        <div class="card">
+            <h2>简介（碎碎念）</h2>
+            <p>我是阿霄，是一个大学才接触计算机的小小白（大雾）正在努力缩短跟别人的差距</p>
+            <p>这是我的男朋友---ret0</p>
+            <p>ret0<a href="https://github.com/RET0000" target="_blank" rel="noopener noreferrer">github</a>直达</p>
+        </div>
+
+        <!-- 博客文章内容将在此处加载 -->
+        <div id="blog-content" class="card">
+         
+        </div>
+
+    </main>
+
+    <footer>
+      &copy; 2025 Aetheria. Built with ❤️ and 🧋.
+      <p>QQ：3072226898</p>
+    </footer>
+  </div>
+
+  <script>
+    // ========== 加载并渲染 Markdown 文章 ==========
+    // 获取要加载的文章路径
+    const articlePath = 'posts/本地部署 Qwen2.5-Coder-14B.md'; // 确保路径正确
+
+    // 创建一个 XMLHttpRequest 对象来获取文件
+    const xhr = new XMLHttpRequest();
+
+    // 当请求成功时执行
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            // 获取文件内容
+            const markdownText = xhr.responseText;
+
+            // 使用 marked.js 将 Markdown 转换为 HTML
+            const htmlContent = marked.parse(markdownText); // 使用 parse 方法更明确
+
+            // 找到页面上的 #blog-content 元素，并将 HTML 内容插入进去
+            const blogContentDiv = document.getElementById('blog-content');
+            blogContentDiv.innerHTML = htmlContent;
+
+            // 可选：为新加载的 HTML 添加一些样式，使其符合主题
+            // 设置加载内容的基本样式，模仿 .card 的外观
+            blogContentDiv.style.marginBottom = '2rem';
+            blogContentDiv.style.padding = '1.8rem';
+            blogContentDiv.style.borderRadius = '12px';
+            blogContentDiv.style.backgroundColor = 'var(--secondary-bg)';
+            blogContentDiv.style.border = '1px solid var(--border-color)';
+            blogContentDiv.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.03)';
+
+            // 确保动态加载的代码块和引用块也有样式
+            const dynamicPreElements = blogContentDiv.querySelectorAll('pre');
+            dynamicPreElements.forEach(pre => {
+                pre.style.backgroundColor = 'var(--secondary-bg)';
+                pre.style.border = '1px solid var(--border-color)';
+                pre.style.borderRadius = '6px';
+                pre.style.padding = '1rem';
+                pre.style.overflowX = 'auto';
+                pre.style.marginBottom = '1.5rem';
+                pre.style.lineHeight = '1.5';
+            });
+
+            const dynamicCodeElements = blogContentDiv.querySelectorAll('code:not(pre code)');
+            dynamicCodeElements.forEach(code => {
+                 code.style.fontFamily = "'Source Code Pro', monospace";
+                 code.style.backgroundColor = 'var(--secondary-bg)';
+                 code.style.border = '1px solid var(--border-color)';
+                 code.style.borderRadius = '6px';
+                 code.style.padding = '0.2em 0.4em';
+                 code.style.fontSize = '0.92em';
+            });
+
+            const dynamicBlockquotes = blogContentDiv.querySelectorAll('blockquote');
+            dynamicBlockquotes.forEach(bq => {
+                bq.style.margin = '1.5rem 0';
+                bq.style.padding = '1rem 1.5rem';
+                bq.style.borderLeft = '5px solid var(--accent-color)';
+                bq.style.backgroundColor = 'rgba(211, 84, 0, 0.05)';
+                bq.style.borderRadius = '0 8px 8px 0';
+                bq.style.fontStyle = 'italic';
+            });
+
+            const dynamicH2Elements = blogContentDiv.querySelectorAll('h2'); // 为 H2 添加装饰线
+            dynamicH2Elements.forEach(h2 => {
+                h2.style.position = 'relative';
+                h2.style.display = 'inline-block';
+                h2.style.color = 'var(--heading-color)';
+                h2.style.marginTop = '1.8em';
+                h2.style.marginBottom = '0.8em';
+                h2.style.fontSize = '1.8rem';
+                // 创建并添加装饰线
+                const underline = document.createElement('span');
+                underline.style.content = '';
+                underline.style.position = 'absolute';
+                underline.style.left = '0';
+                underline.style.bottom = '-5px';
+                underline.style.width = '50px';
+                underline.style.height = '3px';
+                underline.style.backgroundColor = 'var(--accent-color)';
+                underline.style.borderRadius = '2px';
+                h2.appendChild(underline); // Append the underline span to h2
+            });
+
+
+        } else {
+            console.error('加载文章失败:', xhr.status, xhr.statusText);
+            document.getElementById('blog-content').innerHTML = '<p style="color: red;">❌ 无法加载文章，请检查文件路径或网络连接。</p>';
+        }
+    };
+
+    // 设置请求类型和 URL
+    xhr.open('GET', articlePath, true);
+    xhr.send();
+
+  </script>
+</body>
+</html>
